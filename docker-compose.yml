@@ -1,0 +1,31 @@
+version: '3.0'
+
+services:
+  api:
+    image: node
+    command: /bin/bash -c 'npm i && npm i -g @nestjs/cli && nest start --watch'
+    working_dir: /opt/project/
+    volumes:
+      - ./app:/opt/project/
+      - '/app/node_modules'
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+    networks:
+      - project-network
+
+  db:
+    image: mongo
+    environment:
+      MONGODB_DATABASE: project
+    networks:
+      - project-network
+    volumes:
+      - ./data:/data/db
+    
+
+networks: 
+  project-network:
+   external:
+    name: network_backend
